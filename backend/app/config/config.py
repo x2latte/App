@@ -12,7 +12,7 @@ load_dotenv()
 
 
 class Settings:
-    PROJECT_NAME: str = "Jojo Shops"
+    PROJECT_NAME: str = "Shop"
     PROJECT_VERSION: str = "1.0.0"
     USE_SQLITE_DB: str = "postgres"
     POSTGRES_USER: str = "postgres"
@@ -20,7 +20,8 @@ class Settings:
     POSTGRES_SERVER: str = "localhost"
     POSTGRES_PORT: int = 5432
     POSTGRES_DB: str = "postgres"
-    DATABASE_URL = f"postgresql://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{POSTGRES_SERVER}:{POSTGRES_PORT}/{POSTGRES_DB}"
+    DATABASE_URL = "sqlite:///./test.db"
+    ## DATABASE_URL = f"postgresql://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{POSTGRES_SERVER}:{POSTGRES_PORT}/{POSTGRES_DB}"
     SECRET_KEY: str = os.getenv("SECRET_KEY")
     ALGORITHM = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES = 30

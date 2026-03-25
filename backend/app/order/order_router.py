@@ -37,15 +37,30 @@ def orderById(id: int, db: Session = Depends(get_db)):
 def deleteById(orderid: int, db: Session = Depends(get_db)):
     return OrderService.deleteOrderById(orderid=orderid, db=db)
 
+# @router.get("/export-csv")
+# def export_csv(db: Session = Depends(get_db)):
+#     orders = OrderService.getAll(db=db)
+#     csv_data = "OrderID,Product,Quantity,Price,Name,Email,TransactionId,UserId,Id,IsDelivered\n"
+#     for order in orders:
+#         csv_data += f"{order.id},{order.name},{order.orderAmount},{order.price},"
+#         csv_data += f"{order.name},{order.email},{order.transactionId},{order.user_id},{order.id},{order.isDelivered}\n"
+
+#     response = StreamingResponse(content=iter([csv_data]), media_type="text/csv")
+#     response.headers["Content-Disposition"] = 'attachment; filename="orders.csv"'
+
+#     return response
+
 @router.get("/export-csv")
 def export_csv(db: Session = Depends(get_db)):
     orders = OrderService.getAll(db=db)
-    csv_data = "OrderID,Product,Quantity,Price,Name,Email,TransactionId,UserId,Id,IsDelivered\n"
+    csv_data = "OrderID,Product,Quantity,Price,Name,Email,TransactionId,UserId,IsDelivered\n"
+    
     for order in orders:
-        csv_data += f"{order.id},{order.name},{order.orderAmount},{order.price},"
-        csv_data += f"{order.name},{order.email},{order.transactionId},{order.user_id},{order.id},{order.isDelivered}\n"
+        for item in order["order_items"]:
+            csv_data += f"{order['id']},{item['name']},{item['quantity']},{item['price']},"
+            csv_data += f"{order['name']},{order['email']},{order['transactionId']},{order['user_id']},{order['isDelivered']}\n"
 
-    response = StreamingResponse(content=iter([csv_data]), media_type="text/csv")
+    response = StreamingResponse(iter([csv_data]), media_type="text/csv")
     response.headers["Content-Disposition"] = 'attachment; filename="orders.csv"'
 
     return response

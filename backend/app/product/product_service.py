@@ -16,7 +16,9 @@ from nltk.sentiment.vader import SentimentIntensityAnalyzer
 #   используется роутером product для API
 
 nltk.download('vader_lexicon')
-sia = SentimentIntensityAnalyzer()
+
+# временное решение
+# sia = SentimentIntensityAnalyzer() 
 
 
 class ProductService:

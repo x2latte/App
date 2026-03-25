@@ -2,7 +2,7 @@
 
 import os
 import stripe
-import mail1
+# import mail1
 from sqlalchemy.orm import Session
 from fastapi.encoders import jsonable_encoder
 from schemas.order import OrderCreatePlaceOrder
@@ -10,6 +10,9 @@ from models.order_models import OrderModel, OrderItemsModel, ShippingAddressMode
 from models.user_models import User
 
 from uuid import uuid4
+
+import smtplib
+from email.mime.text import MIMEText
 
 # 	управляет заказами в базе
 # 	создаёт новые заказы и связанные объекты (товары, адрес)
@@ -21,13 +24,24 @@ from uuid import uuid4
 stripe.api_key = os.environ.get("STRIPE_KEY")
 
 def send_mail(subject, text, recipients):
-    mail1.send(subject=subject,
-               text=text,
-               recipients=recipients,
-               sender='',
-               username='',
-               password='',
-               smtp_host='')
+    msg = MIMEText(text)
+    msg['Subject'] = subject
+    msg['From'] = 'your_email@example.com'
+    msg['To'] = ', '.join(recipients)
+
+    with smtplib.SMTP('smtp.example.com', 587) as server:
+        server.starttls()
+        server.login('your_email@example.com', 'password')
+        server.sendmail(msg['From'], recipients, msg.as_string())
+
+# def send_mail(subject, text, recipients):
+#    mail1.send(subject=subject,
+#            text=text,
+#            recipients=recipients,
+#            sender='',
+#            username='',
+#            password='',
+#            smtp_host='')
 
 
 class OrderService:
