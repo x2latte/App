@@ -13,3 +13,6 @@ lsof -ti:8000 | xargs kill -9 2>/dev/null
 
 Запуск тестировки:
 ./test_api.sh
+
+git rm -r --cached .
+git add .
