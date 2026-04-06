@@ -5,3 +5,10 @@ const PrivateRoute = ({ children, isAuth }) => {
 };
 
 export default PrivateRoute;
+
+// затычка
+// import { Navigate } from 'react-router-dom';
+// const PrivateRoute = ({ children, isAuth }) => {
+//   return isAuth ? children : <Navigate to="/login" />;
+// };
+// export default PrivateRoute;

@@ -40,3 +40,16 @@ export default function Layout() {
     </Box>
   );
 }
+
+
+// import { Outlet } from 'react-router-dom';
+// import React from 'react';
+// const Layout = () => {
+//   return (
+//     <div>
+//       <h2>Admin Menu</h2>
+//       <Outlet />
+//     </div>
+//   );
+// };
+// export default Layout;

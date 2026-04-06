@@ -12,8 +12,12 @@ lsof -ti:8000 | xargs kill -9 2>/dev/null
 ./venv/bin/uvicorn app.main:app --reload
 
 Запуск тестировки:
-chmod +x test_full.sh
+chmod +x test_all.sh
+./test_all.sh
 
 frontend:
 lsof -ti:3000 | xargs kill -9
 cd admin-panel && npm start
+
+Посмотреть всех пользователей бд
+sqlite3 ecommerce.db "SELECT * FROM users;"
