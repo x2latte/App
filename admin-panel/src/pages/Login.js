@@ -1,58 +1,44 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { TextField, Button, Container, Typography, Box } from '@mui/material';
-import { login } from '../api';
+import { TextField, Button, Container, Typography, Paper, Alert } from '@mui/material';
+import api from '../api';
 
-const Login = ({ setAuth }) => {
+export default function Login({ onLogin }) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError('');
     try {
-      const res = await login(username, password);
-      localStorage.setItem('token', res.data.access_token);
-      setAuth(true);
-      navigate('/products');
+      const formData = new URLSearchParams();
+      formData.append('username', username);
+      formData.append('password', password);
+      const res = await api.post('/auth/login', formData, {
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+      });
+      const token = res.data.access_token;
+      localStorage.setItem('access_token', token);
+      onLogin(token);
     } catch (err) {
-      setError('Invalid credentials');
+      setError('Неверный логин или пароль');
     }
   };
 
   return (
-    <Container maxWidth="sm">
-      <Box sx={{ mt: 8, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-        <Typography component="h1" variant="h5">Admin Login</Typography>
-        <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
-          <TextField
-            margin="normal"
-            required fullWidth
-            label="Username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-          />
-          <TextField
-            margin="normal"
-            required fullWidth
-            label="Password"
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          {error && <Typography color="error">{error}</Typography>}
-          <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
-            Sign In
-          </Button>
-        </Box>
-      </Box>
+    <Container component="main" maxWidth="xs">
+      <Paper elevation={3} sx={{ p: 4, mt: 8 }}>
+        <Typography variant="h5" align="center">Вход в систему</Typography>
+        {error && <Alert severity="error" sx={{ mt: 2 }}>{error}</Alert>}
+        <form onSubmit={handleSubmit}>
+          <TextField margin="normal" required fullWidth label="Имя пользователя" autoFocus value={username} onChange={e => setUsername(e.target.value)} />
+          <TextField margin="normal" required fullWidth label="Пароль" type="password" value={password} onChange={e => setPassword(e.target.value)} />
+          <Button type="submit" fullWidth variant="contained" sx={{ mt: 3 }}>Войти</Button>
+        </form>
+      </Paper>
     </Container>
   );
-};
-
-export default Login;
-
+}
 // затычка
 // import React from 'react';
 // const Login = () => <div>Login Page</div>;
